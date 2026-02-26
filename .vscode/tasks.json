@@ -8,11 +8,13 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "EngineerCalculator.c",
+                "motor_data.c", 
+                "search_equipment.c",
                 "-o",
-                "${workspaceFolder}\\${fileBasenameNoExtension}.exe"
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${fileDirname}"
             },
             "problemMatcher": [
                 "$gcc"
