@@ -1,0 +1,34 @@
+#ifndef MOTOR_DATA_H
+#define MOTOR_DATA_H
+
+#include <stdio.h>
+
+typedef struct Motor
+{
+    float power_kw;                 // Motor power in kilowatts
+    float nominal_current_a;        // Motor nominal current in amperes
+    float voltage_380v;             // Motor voltage (always 380V)
+    float cos_phi;                  // Motor power coefficient
+} Motor;
+
+/**
+ * Returns the amount of motors in data list.
+ * @return count for motors (0 if database is empty).
+ */
+int motor_get_count(void);
+
+/**
+ * Finds motor with closest power to given value.
+ * @param power_kw target power in kilowatts.
+ * @return pointer to Motor or NULL if database is empty.
+ */
+const Motor* motor_get_by_power(float power_kw);
+
+/**
+ * Finds motor with closest current to given value.
+ * @param current target current in amperes.
+ * @return pointer to Motor or NULL if database is empty.
+ */
+const Motor* motor_get_by_current(float current_a);
+
+#endif
