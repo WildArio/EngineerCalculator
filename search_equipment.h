@@ -8,7 +8,13 @@ typedef enum SearchParameter {
     FIND_BY_CURRENT
 } SearchParameter;
 
-const Motor* search_motor_by_parameter(const Motor motors[], int size, SearchParameter parameter, float value);
+typedef struct MotorSearchResults {
+    int found_index;
+    const Motor* motor;
+    int searched_standard_value;
+} SearchResults;
+
+SearchResults search_nearest_motor(const Motor motors[], int size, SearchParameter parameter, float value);
 
 static float get_field_value(const Motor* motor, SearchParameter param);
 

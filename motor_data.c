@@ -33,24 +33,52 @@ static const Motor MOTORS_DATA[] = {
 
 int motor_get_count(void) {
     return sizeof(MOTORS_DATA) / sizeof(MOTORS_DATA[0]);
-};
+}
 
 const Motor* motor_get_by_power(float power_kw) {
     int size = motor_get_count();
 
-    const Motor* motor = search_motor_by_parameter(MOTORS_DATA, size, FIND_BY_POWER, power_kw);
+    SearchResults found_motor = search_nearest_motor(MOTORS_DATA, size, FIND_BY_POWER, power_kw);
 
-    if (motor) {
-        return motor;
-    }
-    else{
-        printf("!!!!!!!!!!!!!!!!\nОшибка поиска мотора по мощности. \n!!!!!!!!!!!!!!!!\n");
-        printf("Взято значение по умолчанию. \n\n");
-        
+    if (found_motor.motor == NULL) {
+        printf("Ошибка поиска мотора! Получение мотора по умолчанию... (0.37 кВт).\n");
+
         return &MOTORS_DATA[0];
-    };
-};
+    }
+    else if (found_motor.searched_standard_value) {
+        printf("Электродвигатель найден. Полученный типоразмер:\n");
+        printf("Мощность: %.2f\n", found_motor.motor->power_kw);
+
+        return found_motor.motor;
+    }
+    else {
+        printf("Введено нестандартное значение мощности электродвигателя. Подобран ближайший типоразмер:\n");
+        printf("Мощность: %.2f\n", found_motor.motor->power_kw);
+
+        return found_motor.motor;
+    }
+}
 
 const Motor* motor_get_by_current(float current_a) {
-    return &MOTORS_DATA[0];
-};
+    int size = motor_get_count();
+
+    SearchResults found_motor = search_nearest_motor(MOTORS_DATA, size, FIND_BY_CURRENT, current_a);
+
+    if (found_motor.motor == NULL) {
+        printf("Ошибка поиска мотора! Получение мотора по умолчанию... (1.3 А).\n");
+
+        return &MOTORS_DATA[0];
+    }
+    else if (found_motor.searched_standard_value) {
+        printf("Электродвигатель найден. Полученный типоразмер:\n");
+        printf("Номинальный ток: %.2f\n", found_motor.motor->nominal_current_a);
+
+        return found_motor.motor;
+    }
+    else {
+        printf("Введено нестандартное значение тока электродвигателя. Подобран ближайший типоразмер:\n");
+        printf("Номинальный ток: %.2f\n", found_motor.motor->nominal_current_a);
+
+        return found_motor.motor;
+    }
+}
